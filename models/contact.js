@@ -25,7 +25,7 @@ const contactSchema = new Schema({
 
 }, {versionKey: false, timestamps: true});
 
-const productSchema = Joi.object({
+const contactAddSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
     phone: Joi.string().min(7).max(16).required(),
@@ -33,9 +33,15 @@ const productSchema = Joi.object({
   
   });
 
-//   const shemas = {
-//     productSchema,
-//   };
+const updateFavoriteSchema = Joi.object ( {
+    favorite: Joi.boolean().required(),
+})
+
+
+  const shemas = {
+    contactAddSchema,
+    updateFavoriteSchema,
+  };
 
 // TEST Error
 contactSchema.post("save", handleMongooseError)
@@ -44,5 +50,5 @@ const Contact = model("contact", contactSchema);
 
 module.exports = {
     Contact,
-    productSchema,
+    shemas,
 };
