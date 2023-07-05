@@ -11,8 +11,8 @@ const {getAllContacts,
 
 
 const {isValidId, validateBody} = require("../../middlewares");
-const {shemas} = require("../../models/contact");
-const {updateFavoriteSchema, contactAddSchema} = shemas;
+const {schemas} = require("../../models/contact");
+const {updateFavoriteSchema, contactAddSchema} = schemas;
 
 
 

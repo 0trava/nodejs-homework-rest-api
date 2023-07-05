@@ -35,17 +35,17 @@ const updateFavoriteSchema = Joi.object ( {
 })
 
 
-  const shemas = {
+  const schemas = {
     contactAddSchema,
     updateFavoriteSchema,
   };
 
 // TEST Error
-contactSchema.post("save", handleMongooseError)
+contactSchema.post("save", handleMongooseError);
 
 const Contact = model("contact", contactSchema);
 
 module.exports = {
     Contact,
-    shemas,
+    schemas,
 };
