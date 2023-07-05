@@ -1,125 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const createError = require("http-errors");
-const Joi = require ("joi");
-
-const productSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-  phone: Joi.string().min(7).max(16).required(),
-
-});
-
-const contactsOperations = require('../../models/contacts');
 
 
-router.get('/', async (req, res, next) => {
- try {
-    const result = await contactsOperations.listContacts();
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result
-      }
-    });
- } catch (error) {
-    next(error);
- }
-});
+const {getAllContacts,
+       getContactById,
+       addContact,
+       updateContact,
+       updateStatusContact,
+       removeContact} = require("../../controllers/contact-controllers");
 
-router.get('/:contactId', async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const result = await contactsOperations.getContactById(contactId);
-    if (result ===  null) {
-      throw createError(404, `Contact with id=${contactId} not found`);
-    }
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result
-      }
-    });
- } catch (error) {
-    next(error);
- }
 
-});
+const {isValidId, validateBody} = require("../../middlewares");
+const {shemas} = require("../../models/contact");
+const {updateFavoriteSchema, contactAddSchema} = shemas;
 
 
 
-router.post('/', async (req, res, next) => {
-  try {
-    const {error} = productSchema.validate(req.body);
-    if (error){
-      error.status = 400;
-      throw error;
-    }
-    const result = await contactsOperations.addContact(req.body);
-    res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        result
-      }
-    });
- } catch (error) {
-    next(error);
- }
-});
 
 
+router.get('/', getAllContacts);
 
-router.delete('/:contactId', async (req, res, next) => {
-  try{
+router.get('/:contactId', isValidId, getContactById);
 
-    const {contactId} = req.params;
-    const result = await contactsOperations.removeContact(contactId);
-    if (result ===  null) {
-      throw createError(404, `Contact with id=${contactId} not found`);
-    }
-    res.json({
-      status: "success",
-      code: 200,
-      message: "contact deleted",
-      data: {
-        result
-      }
-    });
+router.post('/', validateBody(contactAddSchema), addContact);
 
-  }catch (error){
-    next(error);
-  }
+router.delete('/:contactId', isValidId, removeContact);
 
-});
+router.put('/:contactId',  isValidId, validateBody(contactAddSchema), updateContact);
 
-
-
-router.put('/:contactId', async (req, res, next) => {
-  try{
-    const {error} = productSchema.validate(req.body);
-    if (error){
-      error.status = 400;
-      throw error;
-    }
-      const {contactId} = req.params;
-      const result = await contactsOperations.updateContact(contactId, req.body);
-      if (result ===  null) {
-        throw createError(404, `Contact with id=${contactId} not found`);
-      }
-      res.json({
-        status: "success",
-        code: 200,
-        data: {
-          result
-        }
-      });
-  } catch (error) {
-    next(error);
-  }
-});
+router.patch('/:contactId/favorite', isValidId, validateBody(updateFavoriteSchema), updateStatusContact);
 
 
 
