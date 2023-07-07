@@ -44,9 +44,25 @@ const login = async (req, res) => {
     })
 }
 
+// LogOut
+const logout = async (req, res) => {
+
+}
+
+// Get User info
+const getCurrent = async (req, res) => {
+    const  {email, subscription} = req.user;
+    res.json ({
+        email,
+        subscription,
+    })
+
+}
 
 
 module.exports = {
     register: ctrlWrapper(register),
     login: ctrlWrapper(login),
+    logout: ctrlWrapper(logout),
+    getCurrent: ctrlWrapper(getCurrent),
 }

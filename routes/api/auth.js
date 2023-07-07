@@ -2,16 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 
-const {validateBody} = require("../../middlewares");
+const {validateBody, authenticate } = require("../../middlewares");
 const {schemas} = require('../../models/user');
 const {registerSchema, loginSchema} = schemas;
 
-const {register, login} = require("../../controllers/auth-controllers");
+const {register, login, logout, getCurrent} = require("../../controllers/auth-controllers");
 
 // SignUp
 router.post("/register", validateBody(registerSchema), register);
 
 // SignIn
 router.post("/login", validateBody(loginSchema), login);
+
+// LogOut
+router.post("/logout", logout);
+
+// Get User info
+router.get("/current", authenticate, getCurrent);
 
 module.exports = router;
