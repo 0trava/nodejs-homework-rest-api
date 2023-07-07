@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const {validateBody, authenticate } = require("../../middlewares");
+const {validateBody, authenticate, upload } = require("../../middlewares");
 const {schemas} = require('../../models/user');
 const {registerSchema, loginSchema, subscriptionSchema} = schemas;
 

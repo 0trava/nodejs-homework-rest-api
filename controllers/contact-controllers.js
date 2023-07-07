@@ -75,3 +75,9 @@ module.exports = {
   updateStatusContact: ctrlWrapper(updateStatusContact),
   removeContact: ctrlWrapper(removeContact),
 };
+
+// UpLoad 
+
+// upload.fields([{name: "cover",maxCount: 1}, {name: subcover, maxCount: 2}])
+// upload.array("cover", 8)
+// upload.single("cover")
