@@ -4,9 +4,9 @@ const router = express.Router();
 
 const {validateBody, authenticate } = require("../../middlewares");
 const {schemas} = require('../../models/user');
-const {registerSchema, loginSchema} = schemas;
+const {registerSchema, loginSchema, subscriptionSchema} = schemas;
 
-const {register, login, logout, getCurrent} = require("../../controllers/auth-controllers");
+const {register, login, logout, getCurrent, updateSubscription} = require("../../controllers/auth-controllers");
 
 // SignUp
 router.post("/register", validateBody(registerSchema), register);
@@ -15,9 +15,12 @@ router.post("/register", validateBody(registerSchema), register);
 router.post("/login", validateBody(loginSchema), login);
 
 // LogOut
-router.post("/logout", logout);
+router.post("/logout", authenticate, logout);
 
 // Get User info
 router.get("/current", authenticate, getCurrent);
+
+// Get User info
+router.patch("/", authenticate, validateBody(subscriptionSchema), updateSubscription);
 
 module.exports = router;

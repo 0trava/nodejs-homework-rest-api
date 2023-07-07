@@ -3,12 +3,18 @@ const { HttpError } = require('../helpers');
 const { ctrlWrapper } = require('../middlewares');
 
 const getAllContacts = async (req, res) => {
-  const {_id: owner} = req.user;
-  
-  const {page = 1, limit = 20} = req.query; // Pagination params
+  const { _id: owner } = req.user;
+
+  // Pagination params and favorite
+  const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
-  
-  const result = await Contact.find({owner}, '-createdAt -updatedAt -owner', {skip, limit}).populate('owner', 'email subscription');
+
+  const result = await Contact.find(
+    favorite ? { owner, favorite } : { owner },
+    '-createdAt -updatedAt -owner',
+    { skip, limit }).populate('owner', 'email subscription');
+
+
   res.json(result);
 };
 
@@ -22,8 +28,8 @@ const getContactById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const {_id: owner} = req.user
-  const result = await Contact.create({...req.body, owner});
+  const { _id: owner } = req.user
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
@@ -54,18 +60,18 @@ const removeContact = async (req, res) => {
   res.json({
     message: 'Contact deleted',
     data: {
-        result
-      }
+      result
+    }
   });
 };
 
 
 
 module.exports = {
-    getAllContacts: ctrlWrapper(getAllContacts),
-    getContactById: ctrlWrapper(getContactById),
-    addContact: ctrlWrapper(addContact),
-    updateContact: ctrlWrapper(updateContact),
-    updateStatusContact: ctrlWrapper(updateStatusContact),
-    removeContact: ctrlWrapper(removeContact),
-  };
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getContactById: ctrlWrapper(getContactById),
+  addContact: ctrlWrapper(addContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
+  removeContact: ctrlWrapper(removeContact),
+};
