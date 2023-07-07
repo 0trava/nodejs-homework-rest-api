@@ -10,7 +10,7 @@ const {getAllContacts,
        removeContact} = require("../../controllers/contact-controllers");
 
 
-const {isValidId, validateBody} = require("../../middlewares");
+const {isValidId, validateBody, authenticate} = require("../../middlewares");
 const {schemas} = require("../../models/contact");
 const {updateFavoriteSchema, contactAddSchema} = schemas;
 
@@ -18,17 +18,17 @@ const {updateFavoriteSchema, contactAddSchema} = schemas;
 
 
 
-router.get('/', getAllContacts);
+router.get('/', authenticate, getAllContacts);
 
-router.get('/:contactId', isValidId, getContactById);
+router.get('/:contactId', authenticate, isValidId, getContactById);
 
-router.post('/', validateBody(contactAddSchema), addContact);
+router.post('/', authenticate, validateBody(contactAddSchema), addContact);
 
-router.delete('/:contactId', isValidId, removeContact);
+router.delete('/:contactId', authenticate, isValidId, removeContact);
 
-router.put('/:contactId',  isValidId, validateBody(contactAddSchema), updateContact);
+router.put('/:contactId',  authenticate, isValidId, validateBody(contactAddSchema), updateContact);
 
-router.patch('/:contactId/favorite', isValidId, validateBody(updateFavoriteSchema), updateStatusContact);
+router.patch('/:contactId/favorite', authenticate, isValidId, validateBody(updateFavoriteSchema), updateStatusContact);
 
 
 
