@@ -10,6 +10,10 @@ const authenticate = async(req, res, next) => {
  const {authorization = ""} = req.headers; //  Get authorization header TOKEN
  const [bearer, token] = authorization.split(" ");
 
+ if (token === "") {
+   next (HttpError(401),"Not authorized");
+}
+
  if (bearer !== "Bearer") {
     next (HttpError(401),"Not authorized");
  }
