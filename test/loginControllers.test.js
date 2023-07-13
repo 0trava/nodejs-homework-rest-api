@@ -24,12 +24,12 @@ describe ("tests for login controllers", () => {
   
     test("login returns response status 200 and response body must contain a token ", async () => {
       const response = await request(app).post("/api/users/login").send({
-        email: "elena@com.ua",
+        email: "0trava0910@gmail.com",
         password: "123456",
       });
       
       expect(response.status).toBe(200);
       expect(typeof response.body.token).toBe("string");
   
-  })
+  });
 });
