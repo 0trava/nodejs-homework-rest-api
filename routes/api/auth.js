@@ -4,18 +4,24 @@ const router = express.Router();
 
 const {validateBody, authenticate, ctrlWrapper, upload } = require("../../middlewares");
 const {schemas} = require('../../models/user');
-const {registerSchema, loginSchema, subscriptionSchema} = schemas;
+const {registerSchema, loginSchema, subscriptionSchema, emailSchema} = schemas;
 
 const {register, 
        login, 
        logout, 
        getCurrent, 
        updateSubscription, 
-       updateAvatar
+       updateAvatar,
+       verifyEmail,
+       resendVerifyEmail,
     } = require("../../controllers/auth");
 
 // SignUp
 router.post("/register", validateBody(registerSchema), ctrlWrapper(register));
+
+router.get("/verify/:verificationToken", ctrlWrapper(verifyEmail));
+
+router.post("/verify", validateBody(emailSchema), ctrlWrapper(resendVerifyEmail));
 
 // SignIn
 router.post("/login", validateBody(loginSchema), ctrlWrapper(login));
